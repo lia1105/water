@@ -1,5 +1,6 @@
 package com.fju.water;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -25,18 +26,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         edMonth = findViewById(R.id.month);
         edNext = findViewById(R.id.next);
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                calculate();
             }
         });
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void calculate (View view) {
+
+    public void calculate () {
         if (!TextUtils.isEmpty(edMonth.getText().toString())){
             float degree = Float.parseFloat(edMonth.getText().toString());
             float fee = 0;
@@ -61,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 fee = 12.075f*degree-110.25f;
             }
-            Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+            Intent intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("FEE",fee);
             startActivity(intent);
         /*new AlertDialog.Builder(this)
                 .setTitle("每月抄表費用")
