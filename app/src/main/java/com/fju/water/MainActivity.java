@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import static com.fju.water.R.string.fee;
+
 public class MainActivity extends AppCompatActivity {
     private EditText edMonth;
     private EditText edNext;
@@ -33,11 +35,10 @@ public class MainActivity extends AppCompatActivity {
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 calculate();
             }
         });
-
 
 
 
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 fee = 12.075f*degree-110.25f;
             }
             Intent intent = new Intent(this, ResultActivity.class);
-            intent.putExtra("FEE",fee);
+            intent.putExtra(getString(R.string.extra_fee),fee);
             startActivity(intent);
         /*new AlertDialog.Builder(this)
                 .setTitle("每月抄表費用")
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     /*new AlertDialog.Builder(this)
                             .setTitle("隔月抄表費用")
                             .setMessage("費用:" + fee)
-                            .setPositiveButton("ok",null)
+                            .setPositiveButton(getString(R.string.ok),null)
                             .show();*/
         } /*if (TextUtils.isEmpty(edMonth.getText().toString())) {
         new AlertDialog.Builder(this)
