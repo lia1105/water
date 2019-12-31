@@ -18,15 +18,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import static com.fju.water.R.string.fee;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private EditText edMonth;
-    private EditText edNext;
+    //private EditText edNext;
+    boolean isNext = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //以下為switch
+        Switch sw = findViewById(R.id.sw);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isNext = isChecked;
+                TextView text = findViewById(R.id.type);
+                text.setText(isNext ? getString(R.string.every_other_month):getString(R.string.monthly));
+            }
+        });
+        //以上為switch
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -107,51 +123,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void calculate () {
-        if (!TextUtils.isEmpty(edMonth.getText().toString())){
+        if (!TextUtils.isEmpty(edMonth.getText().toString())) {
             float degree = Float.parseFloat(edMonth.getText().toString());
             float fee = 0;
-            if (degree < 11) {
-                fee = 7.35f*degree;
-            } else if (degree>11 && degree < 31) {
-                fee = 9.45f*degree-21;
-            } else if (degree>31 && degree <51) {
-                fee = 11.55f*degree-84;
-            } else {
-                fee = 12.075f*degree-110.25f;
+            if (isNext == false) { //switch
+                if (degree < 11) {
+                    fee = 7.35f * degree;
+                } else if (degree > 11 && degree < 31) {
+                    fee = 9.45f * degree - 21;
+                } else if (degree > 31 && degree < 51) {
+                    fee = 11.55f * degree - 84;
+                } else {
+                    fee = 12.075f * degree - 110.25f;
+                }
             }
-            Intent intent = new Intent(this, ResultActivity.class);
-            intent.putExtra(getString(R.string.extra_fee),fee);
-            startActivity(intent);
-        /*new AlertDialog.Builder(this)
-                .setTitle("每月抄表費用")
-                .setMessage("費用:" + fee)
-                .setPositiveButton("ok",null)
-                .show();*/
+
+        else if (isNext == true) { //switch
+                if (degree < 21) {
+                    fee = 7.35f * degree;
+                } else if (degree > 21 && degree < 61) {
+                    fee = 9.45f * degree - 42;
+                } else if (degree > 61 && degree < 101) {
+                    fee = 11.55f * degree - 168;
+                } else {
+                    fee = 12.075f * degree - 220.5f;
+                }
+            }
+                    Intent intent = new Intent(this, ResultActivity.class);
+                    intent.putExtra(getString(R.string.extra_fee), fee);
+                    startActivity(intent);
+            }
+
         }
 
-        if (!TextUtils.isEmpty(edNext.getText().toString())) {
-            float degree = Float.parseFloat(edNext.getText().toString());
-            float fee = 0;
-            if (degree < 21) {
-                fee = 7.35f*degree;
-            } else if (degree>21 && degree < 61) {
-                fee = 9.45f*degree-42;
-            } else if (degree>61 && degree <101) {
-                fee = 11.55f*degree-168;
-            } else {
-                fee = 12.075f*degree-220.5f;
-            }
-                    /*new AlertDialog.Builder(this)
-                            .setTitle("隔月抄表費用")
-                            .setMessage("費用:" + fee)
-                            .setPositiveButton(getString(R.string.ok),null)
-                            .show();*/
-        } /*if (TextUtils.isEmpty(edMonth.getText().toString())) {
-        new AlertDialog.Builder(this)
-                .setTitle("無法計算")
-                .show();
-        }*/
-    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
